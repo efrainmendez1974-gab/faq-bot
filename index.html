@@ -2,109 +2,187 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Preguntas Frecuentes RFT</title>
+<title>Bot FAQ RFT</title>
+
 <style>
 body{
   font-family: Arial, sans-serif;
-  background:#f4f4f4;
 }
-.container{
-  width:420px;
-  margin:40px auto;
+
+/* Botón flotante */
+#bot-toggle{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#007BFF;
+  color:#fff;
+  border:none;
+  border-radius:50%;
+  width:60px;
+  height:60px;
+  font-size:26px;
+  cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,.3);
+}
+
+/* Ventana flotante */
+#bot-container{
+  position:fixed;
+  bottom:90px;
+  right:20px;
+  width:350px;
   background:#fff;
   border-radius:10px;
-  padding:15px;
-  box-shadow:0 0 10px rgba(0,0,0,.2);
+  box-shadow:0 0 15px rgba(0,0,0,.3);
+  display:none;
+  flex-direction:column;
 }
-.chat{
-  height:260px;
-  border:1px solid #ccc;
+
+/* Encabezado */
+#bot-header{
+  background:#007BFF;
+  color:#fff;
   padding:10px;
-  overflow-y:auto;
-  margin-bottom:10px;
+  border-radius:10px 10px 0 0;
+  font-weight:bold;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
-.bot{color:green;margin-bottom:8px;}
-.user{color:blue;text-align:right;margin-bottom:8px;}
-.menu button{
+
+/* Chat */
+#chat{
+  height:250px;
+  overflow-y:auto;
+  padding:10px;
+  border-bottom:1px solid #ccc;
+}
+
+/* Mensajes */
+.bot p{
+  background:#e9f5e9;
+  padding:6px;
+  border-radius:5px;
+  margin:4px 0;
+}
+
+.user p{
+  background:#e9ecff;
+  padding:6px;
+  border-radius:5px;
+  margin:4px 0;
+  text-align:right;
+}
+
+/* Menú */
+#menu{
+  padding:10px;
+}
+
+#menu button{
   width:100%;
-  padding:8px;
+  padding:6px;
   margin:4px 0;
   border:none;
   border-radius:5px;
   background:#007BFF;
   color:#fff;
   cursor:pointer;
+  font-size:14px;
 }
-.menu button:hover{background:#0056b3;}
-small{color:gray;}
+
+#menu button:hover{
+  background:#0056b3;
+}
+
+small{
+  text-align:center;
+  display:block;
+  padding:4px;
+  color:gray;
+}
 </style>
 </head>
 
 <body>
-<div class="container">
-  <h3>🤖 Preguntas Frecuentes RFT</h3>
-  <div class="chat" id="chat"></div>
-  <div class="menu" id="menu"></div>
+
+<!-- Botón flotante -->
+<button id="bot-toggle" onclick="toggleBot()">💬</button>
+
+<!-- Ventana del bot -->
+<div id="bot-container">
+  <div id="bot-header">
+    🤖 Preguntas RFT
+    <span style="cursor:pointer" onclick="toggleBot()">✖</span>
+  </div>
+
+  <div id="chat"></div>
+  <div id="menu"></div>
   <small>Versión 1.0</small>
 </div>
 
 <script>
 const chat = document.getElementById("chat");
 const menu = document.getElementById("menu");
+const bot = document.getElementById("bot-container");
 
 const faqs = [
   {
-    pregunta: "¿Cuáles son los periodos de captura?",
-    respuesta: "Del 1 al 15 de Abril, Julio, Octubre y Enero"
+    pregunta:"¿Cuáles son los periodos de captura?",
+    respuesta:"Del 1 al 15 de Abril, Julio, Octubre y Enero"
   },
   {
-    pregunta: "¿Cuándo se captura el Informe Definitivo?",
-    respuesta: "Al mismo tiempo del Segundo Periodo se captura el Informe Definitivo del Año Anterior"
+    pregunta:"¿Cuándo se captura el Informe Definitivo?",
+    respuesta:"Al mismo tiempo del Segundo Periodo se captura el Informe Definitivo del Año Anterior"
   },
   {
-    pregunta: "¿Qué me obliga a Reportar?",
-    respuesta: "Artículo 1, Artículo 50 y Artículo 38"
+    pregunta:"¿Qué me obliga a Reportar?",
+    respuesta:"Artículo 1, Artículo 50 y Artículo 38"
   },
   {
-    pregunta: "¿Qué pasa si no reporto?",
-    respuesta: "En auditorías es la primera información que se considera"
+    pregunta:"¿Qué pasa si no reporto?",
+    respuesta:"En auditorías es la primera información que se considera"
   },
   {
-    pregunta: "¿Cómo doy de alta y baja un usuario?",
-    respuesta: "Consulta la información en el siguiente enlace",
-    link: "https://example.com/usuarios"
+    pregunta:"¿Cómo doy de alta y baja un usuario?",
+    respuesta:"Consulta la información en el siguiente enlace",
+    link:"https://example.com/usuarios"
   }
 ];
 
+function toggleBot(){
+  bot.style.display = bot.style.display === "flex" ? "none" : "flex";
+}
+
 function mostrarMenu(){
-  menu.innerHTML = "";
-  faqs.forEach(f => {
-    const btn = document.createElement("button");
-    btn.textContent = f.pregunta;
-    btn.onclick = () => responder(f);
+  menu.innerHTML="";
+  faqs.forEach(f=>{
+    const btn=document.createElement("button");
+    btn.textContent=f.pregunta;
+    btn.onclick=()=>responder(f);
     menu.appendChild(btn);
   });
 }
 
 function responder(f){
-  menu.innerHTML = "";
-  chat.innerHTML += `<div class="user">${f.pregunta}</div>`;
-  let texto = `<div class="bot">${f.respuesta}`;
-  if(f.link){
-    texto += `<br><a href="${f.link}" target="_blank">👉 Ir al enlace</a>`;
-  }
-  texto += `</div>`;
-  chat.innerHTML += texto;
-
-  setTimeout(() => {
-    chat.innerHTML += `<div class="bot">Selecciona otra opción 👇</div>`;
+  menu.innerHTML="";
+  chat.innerHTML += `
+    <div class="user"><p>${f.pregunta}</p></div>
+    <div class="bot">
+      <p>${f.respuesta}</p>
+      ${f.link ? `<p><a href="${f.link}" target="_blank">👉 Ir al enlace</a></p>` : ""}
+    </div>
+  `;
+  setTimeout(()=>{
+    chat.innerHTML += `<div class="bot"><p>Selecciona otra opción 👇</p></div>`;
     mostrarMenu();
     chat.scrollTop = chat.scrollHeight;
-  }, 2500);
+  },2000);
 }
 
-chat.innerHTML = `<div class="bot">Hola 👋 selecciona una pregunta:</div>`;
+chat.innerHTML = `<div class="bot"><p>Hola 👋 selecciona una pregunta:</p></div>`;
 mostrarMenu();
 </script>
+
 </body>
 </html>
